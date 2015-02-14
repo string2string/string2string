@@ -72,6 +72,10 @@ function reconnect() {
   }, 3000);
 }
 
+app.get('/init', function(req, res) {
+
+});
+
 boardConnection.on('end', reconnect);
 
 io.sockets.on('connection', function(socket) {
