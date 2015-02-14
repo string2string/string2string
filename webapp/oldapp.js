@@ -17,7 +17,12 @@ app.use(errorHandler);
 var server = http.createServer(app);
 
 var io = require('socket.io')(server);
+// var net = require('net');
+// var port = configs.settings.socketPort;
+// var host = configs.settings.socketIp;
+// var boardConnection = net.createConnection(port, host);
 
+// var carrier = require('carrier');
 var DELIM = '~';
 var PDELIM = ',';
 /*
@@ -33,6 +38,7 @@ function relayBoardInfo(line) {
   var data = line.split(DELIM);
   var msgType = data.shift();
   if (msgType === 'E') {
+    // console.log('E!');
     points = [];
     io.sockets.emit('eraseAll');
   } else if (msgType === 'P') {
@@ -45,12 +51,26 @@ function relayBoardInfo(line) {
     data = data.map(function(elem) {
       return parseFloat(elem);
     });
+    // var newData = [];
+    // for (var i = 0; i < data.length; ++i) {
+    //   newData.push(data[i].x);
+    //   newData.push(data[i].y);
+    // }
     io.sockets.emit('draw', {data: data});
     points.push(data);
+    // console.log(points);
   } else {
     console.log('Invalid line: ', line);
   }
 }
+// carrier.carry(boardConnection, relayBoardInfo);
+// function reconnect() {
+//   setTimeout(function() {
+//     boardConnection = net.createConnection(port, host);
+//     carrier.carry(boardConnection, relayBoardInfo);
+//     boardConnection.on('end', reconnect);
+//   }, 3000);
+// }
 
 app.post('/chalkboard', function(req, res, next) {
   if (req.query.id !== 'string2string') {
@@ -59,6 +79,8 @@ app.post('/chalkboard', function(req, res, next) {
   relayBoardInfo(req.query.query);
   res.sendStatus(200);
 });
+
+// boardConnection.on('end', reconnect);
 
 io.sockets.on('connection', function(socket) {
 

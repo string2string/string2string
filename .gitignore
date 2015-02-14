@@ -1,6 +1,4 @@
-node_modules/
+de_modules/
 .sass-cache/
 bower_components/
 .DS_Store
-main.css
-__pycache__
