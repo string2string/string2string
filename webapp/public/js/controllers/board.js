@@ -3,7 +3,7 @@
 /*global io*/
 /*global getCurvePoints*/
 
-var login = angular.module('controllers.board', []);
+var board = angular.module('controllers.board', []);
 
 //seems like x is down and y is right
 function Board($rootScope) {
@@ -123,4 +123,4 @@ function Board($rootScope) {
   socket.emit('init');
 }
 
-login.controller('BoardCtrl', ['$rootScope', Board])
+board.controller('BoardCtrl', ['$rootScope', Board])
