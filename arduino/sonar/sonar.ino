@@ -21,6 +21,10 @@
 
 #define BUTTON 8
 
+#define BUTTONB 7
+#define BUTTONC 6
+#define BUTTOND 5
+
 #define SONAR_NUM     2 // Number or sensors.
 #define MAX_DISTANCE 200 // Max distance in cm.
 #define PING_INTERVAL 33 // Milliseconds between pings.
@@ -36,6 +40,10 @@ NewPing sonar[SONAR_NUM] = { // Sensor object array.
 
 void setup() {
   pinMode(BUTTON, INPUT);
+  pinMode(BUTTONB, INPUT);
+  pinMode(BUTTONC, INPUT);
+  pinMode(BUTTOND, INPUT);
+  
   Serial.begin(115200);
   pingTimer[0] = millis() + 75; // First ping start in ms.
   for (uint8_t i = 1; i < SONAR_NUM; i++)
@@ -64,6 +72,10 @@ void echoCheck() { // If ping echo, set distance to array.
 
 int lastPressed = 0;
 
+int bState = 0;
+int cState = 0;
+int dState = 0;
+
 void oneSensorCycle() { // Do something with the results.
   int state = digitalRead(BUTTON);
   if(state == 1)
@@ -85,5 +97,37 @@ void oneSensorCycle() { // Do something with the results.
       Serial.println("R");
       lastPressed = 0;
     }
+  }
+  
+  // Other Buttons
+  int bRead = digitalRead(BUTTONB);
+  int cRead = digitalRead(BUTTONC);
+  int dRead = digitalRead(BUTTOND);
+  
+  if(bRead == 0){
+     bState = 0;
+  }else{
+     if(bState == 0){
+       Serial.println("B");
+       bState = 1;
+     }
+  }
+  
+  if(cRead == 0){
+     cState = 0;
+  }else{
+     if(cState == 0){
+       Serial.println("C");
+       cState = 1;
+     }
+  }
+  
+  if(dRead == 0){
+     dState = 0;
+  }else{
+     if(dState == 0){
+       Serial.println("D");
+       dState = 1;
+     }
   }
 }
