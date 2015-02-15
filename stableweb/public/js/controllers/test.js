@@ -3,7 +3,8 @@ var test = angular.module('controllers.test', ['snap']);
 function Test($rootScope, $scope, $http) {
   var canvas = $('#chalkboard')[0];
   canvas.width  = canvas.offsetWidth;
-  canvas.height = canvas.offsetHeight;  
+  canvas.height = canvas.offsetHeight;
+  var demoWidth = canvas.offsetWidth; //for demo purposes
   var ctx = canvas.getContext('2d');
   var brushDiameter = 7;
   ctx.fillStyle = 'rgba(255,255,255,0.5)';  
@@ -82,7 +83,7 @@ function Test($rootScope, $scope, $http) {
       if (i % 2 === 0) {
         points[i] = points[i]*canvas.width;
       } else {
-        points[i] = points[i]*canvas.height;
+        points[i] = points[i]*demoWidth;
       }
     }
     return points;
@@ -149,7 +150,7 @@ function Test($rootScope, $scope, $http) {
   $scope.downloadCachedBoard = function(id) {
     saveAsFile(cachedBoards[id], 'canvas'+id+'.png');
   }
-  
+
   var socket = io($rootScope.baseUrl);
   //socket.emit('my other event', { my: 'data' });
   socket.on('eraseAll', function() {
