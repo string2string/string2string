@@ -186,6 +186,7 @@ function Test($rootScope, $scope, $http) {
   //   console.log(data);
   // });
   socket.on('givemeBoardAndErase', function() {
+    console.log('got request!');
     var data = cloneCanvas(canvas).toDataURL()
     eraseAll();
     $http.post('/ocr', {data: data});
