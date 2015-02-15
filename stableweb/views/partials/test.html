@@ -7,10 +7,10 @@
 
 <snap-drawer>
     <div id="displacedDiv">
-    <h3>OCR Results:</h3>
+    <h3>Image Logs:</h3>
     <ul>
-        <li ng-repeat="elem in ocrResults">
-            <span>{{elem.text}} - <a ng-click="downloadCachedBoard(elem.canvasId)">{{elem.canvasId}}</a></span>
+        <li ng-repeat="elem in cachedBoardIds">
+            <a ng-click="downloadCachedBoard(elem)">{{elem}}</a>
         </li>
     </ul>
     </div>

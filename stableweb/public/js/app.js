@@ -13,11 +13,11 @@ var app = angular.module('smartboard', [
 
 function configApp($routeProvider, $locationProvider) {
   $routeProvider
+    // .when('/', {
+    //   templateUrl: 'partials/board.html',
+    //   controller: 'BoardCtrl'
+    // })
     .when('/', {
-      templateUrl: 'partials/board.html',
-      controller: 'BoardCtrl'
-    })
-    .when('/test', {
       templateUrl: 'partials/test.html',
       controller: 'TestCtrl'
     })

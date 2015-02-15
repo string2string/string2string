@@ -1,0 +1,44 @@
+$icon-font-path: "/bower_components/sass-bootstrap/fonts/";
+
+@import '../bower_components/sass-bootstrap/lib/bootstrap';
+
+html, body {
+    margin:0;
+    padding:0;
+    width:100%;
+    height:100%;
+}
+
+/*canvas {
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:1;
+    background:url(../img/bg.png);
+}*/
+
+a {
+    cursor:pointer;
+}
+
+#canvasDiv {
+    width:100%;
+    height:100%;
+}
+
+#chalkboard {
+    width:100%;
+    height:100%;
+    background:url(../img/bg.png);
+}
+
+#displacedDiv {
+    width:100%;
+    height:100%;
+    position: absolute;
+    top:50px;
+    bottom:0;
+    overflow:scroll;
+}
