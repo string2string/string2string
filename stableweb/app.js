@@ -29,7 +29,6 @@ points as list of x,y
  */
 var points = [];
 function relayBoardInfo(line) {
-  console.log(points);
   var data = line.split(DELIM);
   var msgType = data.shift();
   if (msgType === 'E') {
