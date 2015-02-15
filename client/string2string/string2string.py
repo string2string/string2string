@@ -3,6 +3,7 @@ import http.client
 import math
 import serial
 import os
+import numpy as np
 
 ######## CLIENT CLASS ###########
 
@@ -55,6 +56,7 @@ class Client:
 		except ValueError:
 			try:
 				t1 = math.acos( (self.dx*self.dx + r[0]*r[0] - r[1]*r[1])/(2*self.dx*r[0]) )
+				print('bullshit')
 			except ValueError:
 				return 'E'
 
@@ -63,6 +65,7 @@ class Client:
 		except ValueError:
 			try: 
 				t2 = math.acos( (self.dx*self.dx + r[1]*r[1] - r[0]*r[0])/(2*self.dx*r[1]) )
+				print('bullshit')
 			except ValueError:
 				return 'E'
 
@@ -139,7 +142,7 @@ class Client:
 
 		self.d_short = (self.d_short[0], summed[1]/len(points))
 		self.d_long = (summed[0]/len(points), self.d_long[1])
-		
+
 		self.dx = ((self.d_long[0] - self.d_short[0]) + (self.d_long[1] - self.d_short[1]))/2
 		print('d_short:',self.d_short,'d_long:',self.d_long,'dx:',self.dx)
 
@@ -154,12 +157,55 @@ class Client:
 					p = self.d2p(d)
 					if type(p) is tuple:
 						packet.append(p)
-						print(p[0],',',p[1])
+						#print(p[0],',',p[1])
 				if d == 'R':
 					break
+				if d == 'B':
+					self.eraseAll()
+			packet = smooth_points(packet)
 			self.sendPoints(packet)
 
 ####### FUNCTIONS ##########
 
+# Sum list of tuples
 def sumTuple(tuple):
 	return [sum(x) for x in zip(*tuple)]
+
+# SciPy smoothing filter example http://wiki.scipy.org/Cookbook/SavitzkyGolay
+def savitzky_golay(y, window_size, order, deriv=0, rate=1):
+	#try:
+	window_size = np.abs(np.int(window_size))
+	order = np.abs(np.int(order))
+	#except ValueError, msg:
+	#    raise ValueError("window_size and order have to be of type int")
+	if window_size % 2 != 1 or window_size < 1:
+		raise TypeError("window_size size must be a positive odd number")
+	if window_size < order + 2:
+		raise TypeError("window_size is too small for the polynomials order")
+	order_range = range(order+1)
+	half_window = (window_size -1) // 2
+	# precompute coefficients
+	b = np.mat([[k**i for i in order_range] for k in range(-half_window, half_window+1)])
+	m = np.linalg.pinv(b).A[deriv] * rate**deriv * math.factorial(deriv)
+	# pad the signal at the extremes with
+	# values taken from the signal itself
+	firstvals = y[0] - np.abs( y[1:half_window+1][::-1] - y[0] )
+	lastvals = y[-1] + np.abs(y[-half_window-1:-1][::-1] - y[-1])
+	y = np.concatenate((firstvals, y, lastvals))
+	return np.convolve( m[::-1], y, mode='valid')
+
+# Smooth list of tuples
+def smooth_points(points_list):
+	x = []
+	y = []
+	for point in points_list:
+		x.append(point[0])
+		y.append(point[1])
+	x = np.array(x)
+	y = np.array(y)
+	xs = savitzky_golay(x,3,1)
+	ys = savitzky_golay(y,3,1)
+	new_points = []
+	for i in range(len(points_list)):
+		new_points.append((xs[i], ys[i]))
+	return new_points
