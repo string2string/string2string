@@ -92,6 +92,10 @@ function Test($rootScope, $scope) {
     return points;
   }
 
+  function eraseAll() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+
   var socket = io($rootScope.baseUrl);
   //socket.emit('my other event', { my: 'data' });
   socket.on('eraseAll', function() {
