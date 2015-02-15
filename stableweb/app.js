@@ -33,6 +33,7 @@ function relayBoardInfo(line) {
   var msgType = data.shift();
   if (msgType === 'E') {
     io.sockets.emit('eraseAll');
+    points = [];
   } else if (msgType === 'P') {
     if (data[0]) {
       data = data[0].split(PDELIM);
