@@ -1,0 +1,3 @@
+applications:
+- name: string2string
+  memory: 512m
