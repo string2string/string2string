@@ -4991,8 +4991,7 @@ html, body {
   margin: 0;
   padding: 0;
   width: 100%;
-  height: 100%;
-  overflow: hidden; }
+  height: 100%; }
 
 /*canvas {
     position:absolute;
@@ -5017,8 +5016,8 @@ a {
 
 #displacedDiv {
   width: 100%;
-  margin-top: 50px;
   height: 100%;
   position: absolute;
+  top: 50px;
   bottom: 0;
-  background: red; }
+  overflow: scroll; }
