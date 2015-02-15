@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 import string2string.string2string as s2s
+import time
 
 client = s2s.Client('hackcooper.cloudapp.net')
 
 client.eraseAll()
 
-client.sendPoints([(1,1), (1000,1000)])
+client.calibrate()
+
+client.run()
