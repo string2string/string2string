@@ -73,8 +73,7 @@ app.post('/chalkboard', function(req, res, next) {
 
 var options = {
   l: 'eng',
-  binary: 'tesseract/tesseract'
-  tessdata-dir: 'tesseract/data/tesseract-ocr/tessdata/'
+  binary: 'tesseract/tesseract --tessdata-dir tesseract/data/tesseract-ocr/tessdata/'
 
 };
 var tesseract = require('node-tesseract');
