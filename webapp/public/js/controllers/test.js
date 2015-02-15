@@ -17,6 +17,9 @@ function Test($rootScope, $scope) {
   ctx.strokeStyle = 'rgba(255,255,255,0.5)';  
   ctx.lineWidth = brushDiameter;
   ctx.lineCap = 'round';
+  ctx.globalCompositeOperation="destination-over";
+  var backgroundImage = new Image();
+  backgroundImage.src = '/img/bg.png';
 
   function draw(xLast, yLast, x, y) {
     ctx.strokeStyle = 'rgba(255,255,255,'+(0.4+Math.random()*0.2)+')';
@@ -95,6 +98,35 @@ function Test($rootScope, $scope) {
   function eraseAll() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
   }
+  
+  //code to save file
+  function saveAsFile(data, name) {
+    function destroyClickedElement(event) {
+      document.body.removeChild(event.target);
+    }
+    var fileNameToSaveAs = name;
+
+    var downloadLink = document.createElement('a');
+    downloadLink.download = fileNameToSaveAs;
+    downloadLink.innerHTML = 'Download File';
+    if (window.webkitURL)
+    {
+      // Chrome allows the link to be clicked
+      // without actually adding it to the DOM.
+      downloadLink.href = data;
+    }
+    else
+    {
+      // Firefox requires the link to be added to the DOM
+      // before it can be clicked.
+      downloadLink.href = data;
+      downloadLink.onclick = destroyClickedElement;
+      downloadLink.style.display = 'none';
+      document.body.appendChild(downloadLink);
+    }
+
+    downloadLink.click();
+  }
 
   var socket = io($rootScope.baseUrl);
   //socket.emit('my other event', { my: 'data' });
@@ -123,6 +155,32 @@ function Test($rootScope, $scope) {
     console.log(data);
   });
   socket.emit('init');
+
+  function cloneCanvas(oldCanvas) {
+
+      //create a new canvas
+      var newCanvas = document.createElement('canvas');
+      var context = newCanvas.getContext('2d');
+
+      //set dimensions
+      newCanvas.width = oldCanvas.width;
+      newCanvas.height = oldCanvas.height;
+
+      //apply the old canvas to the new one with background
+      context.drawImage(backgroundImage,
+        0,0,backgroundImage.width,backgroundImage.height,
+        0,0,newCanvas.width,newCanvas.height);
+      context.drawImage(oldCanvas, 0, 0);
+
+      //return the new canvas
+      return newCanvas;
+  }
+
+  $scope.downloadBoard = function() {
+    var newCanvas = cloneCanvas(canvas);
+    var data = newCanvas.toDataURL();
+    saveAsFile(data, 'canvas'+(new Date()).getTime()+'.png');
+  }
 }
 
 test.controller('TestCtrl', ['$rootScope', '$scope', Test]);
