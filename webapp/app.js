@@ -38,6 +38,7 @@ function relayBoardInfo(line) {
     var randomClient;
     if (clients.length > 0) {
       randomClient = Math.floor(Math.random() * clients.length);
+      console.log('send erase');
       clients[randomClient].emit('givemeBoardAndErase');
     }
     for (var i = 0; i < clients.length; ++i) {
