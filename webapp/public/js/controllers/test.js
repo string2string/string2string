@@ -1,12 +1,6 @@
-'use strict';
-/*global angular*/
-/*global io*/
-/*global getCurvePoints*/
+var test = angular.module('controllers.test', ['snap']);
 
-var board = angular.module('controllers.board', []);
-
-//seems like x is down and y is right
-function Board($rootScope) {
+function Test($rootScope, $scope) {
   var pts = [];
   //test pts
   pts.push({x: 100, y:100});
@@ -15,8 +9,8 @@ function Board($rootScope) {
   }
 
   var canvas = $('#chalkboard')[0];
-  canvas.width = $(window).width();
-  canvas.height = $(window).height();
+  canvas.width  = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;  
   var ctx = canvas.getContext('2d');
   var brushDiameter = 7;
   ctx.fillStyle = 'rgba(255,255,255,0.5)';  
@@ -87,10 +81,6 @@ function Board($rootScope) {
     }, 5);
   }
 
-  function eraseAll() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-  }
-
   var socket = io($rootScope.baseUrl);
   //socket.emit('my other event', { my: 'data' });
   socket.on('eraseAll', function() {
@@ -120,4 +110,5 @@ function Board($rootScope) {
   socket.emit('init');
 }
 
-board.controller('BoardCtrl', ['$rootScope', Board])
+test.controller('TestCtrl', ['$rootScope', '$scope', Test]);
+
