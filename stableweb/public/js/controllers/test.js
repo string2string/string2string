@@ -155,7 +155,7 @@ function Test($rootScope, $scope, $http) {
   socket.on('eraseAll', function() {
     var time = (new Date).getTime();
     cachedBoards[time] = cloneCanvas(canvas).toDataURL();
-    cachedBoardIds.push(time);
+    $scope.cachedBoardIds.push(time);
     eraseAll();
   });
   socket.on('draw', function(data) {
