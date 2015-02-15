@@ -59,18 +59,10 @@ app.post('/chalkboard', function(req, res, next) {
 
 io.sockets.on('connection', function(socket) {
 
-  clients.push(socket);
-
   socket.on('init', function() {
     socket.emit('init', {data: points});
   });
-
-  socket.on('disconnect', function() {
-      var index = clients.indexOf(socket);
-      if (index !== -1) {
-          clients.splice(index, 1);
-      }
-  });
+  
 });
 
 console.log('listening on port ' + configs.settings.port);
