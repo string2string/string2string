@@ -77,22 +77,6 @@ var options = {
 };
 var tesseract = require('node-tesseract');
 var fs = require('fs');
-app.post('/ocr', function(req, res, next) {
-  console.log('post');
-  var base64Data = req.body.data.replace(/^data:image\/png;base64,/, '');
-  fs.writeFile(__dirname+'/out.png', base64Data, 'base64', function(err) {
-    if (err) {
-console.log(err);
-      fs.unlinkSync(__dirname+'/out.png');
-      return io.sockets.emit('ocr', {text: 'failed image serialization'});
-    }
-    tesseract.process(__dirname+'/out.png', options, function(err, text) {
-      if (err) { console.log(err); return io.sockets.emit('ocr', {text: 'N/A'}); }
-      fs.unlinkSync(__dirname+'/out.png');
-      io.sockets.emit('ocr', {text: text});
-    });
-  });
-});
 
 io.sockets.on('connection', function(socket) {
 
@@ -100,6 +84,21 @@ io.sockets.on('connection', function(socket) {
 
   socket.on('init', function() {
     socket.emit('init', {data: points});
+  });
+
+  socket.on('ocr', function() {
+    var base64Data = req.body.data.replace(/^data:image\/png;base64,/, '');
+    fs.writeFile(__dirname+'/out.png', base64Data, 'base64', function(err) {
+      if (err) { 
+        fs.unlinkSync(__dirname+'/out.png');
+        return io.sockets.emit('ocr', {text: 'failed image serialization'});
+      }
+      tesseract.process(__dirname+'/out.png', options, function(err, text) {
+        if (err) { return io.sockets.emit('ocr', {text: 'N/A'}); }
+        fs.unlinkSync(__dirname+'/out.png');
+        io.sockets.emit('ocr', {text: text});
+      });
+    });
   });
 
   // socket.on('chat', function(data) {
