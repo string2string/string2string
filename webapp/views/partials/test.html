@@ -6,7 +6,27 @@
 </div>
 
 <snap-drawer>
-    <p>Hello from drawer!</p>
+    <div id="displacedDiv">
+    <h3>OCR Results:</h3>
+    <ul>
+        <li ng-repeat="elem in ocrResults">
+            <span>{{elem.text}} - <a ng-click="downloadCachedBoard(elem.canvasId)">{{elem.canvasId}}</a></span>
+        </li>
+    </ul>
+    <p>1Hello from drawer!</p>
+    <p>2Hello from drawer!</p>
+    <p>3Hello from drawer!</p>
+    <p>4Hello from drawer!</p>
+    <p>5Hello from drawer!</p>
+    <p>6Hello from drawer!</p>
+    <p>7Hello from drawer!</p>
+    <p>8Hello from drawer!</p>
+    <p>9Hello from drawer!</p>
+    <p>10Hello from drawer!</p>
+    <p>11Hello from drawer!</p>
+    <p>12Hello from drawer!</p>
+    <p>13Hello from drawer!</p>
+    </div>
 </snap-drawer>
 <snap-content snap-options="{touchToDrag:false,tapToClose:false}">
     <div id="canvasDiv">

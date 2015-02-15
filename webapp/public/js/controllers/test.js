@@ -1,6 +1,6 @@
 var test = angular.module('controllers.test', ['snap']);
 
-function Test($rootScope, $scope) {
+function Test($rootScope, $scope, $http) {
   var pts = [];
   //test pts
   pts.push({x: 100, y:100});
@@ -128,9 +128,40 @@ function Test($rootScope, $scope) {
     downloadLink.click();
   }
 
+  function cloneCanvas(oldCanvas) {
+
+    //create a new canvas
+    var newCanvas = document.createElement('canvas');
+    var context = newCanvas.getContext('2d');
+
+    //set dimensions
+    newCanvas.width = oldCanvas.width;
+    newCanvas.height = oldCanvas.height;
+
+    //apply the old canvas to the new one with background
+    context.drawImage(backgroundImage,
+      0,0,backgroundImage.width,backgroundImage.height,
+      0,0,newCanvas.width,newCanvas.height);
+    context.drawImage(oldCanvas, 0, 0);
+
+    //return the new canvas
+    return newCanvas;
+  }
+
+  $scope.downloadCachedBoard = function(id) {
+    console.log(id);
+    saveAsFile(cachedCanvases[id], 'canvas'+id+'.png');
+  }
+
+  //array of objs storing text and canvasId
+  $scope.ocrResults = [{text: 'hello', canvasId: 'gg'}, {text: 'hi', canvasId:'haha'}];
+  //dictionary of canvases
+  var cachedCanvases = {};
+  var tmpCanvasUrl;
   var socket = io($rootScope.baseUrl);
   //socket.emit('my other event', { my: 'data' });
   socket.on('eraseAll', function() {
+    tmpCanvasUrl = cloneCanvas(canvas).toDataURL();
     eraseAll();
   });
   socket.on('draw', function(data) {
@@ -150,31 +181,22 @@ function Test($rootScope, $scope) {
     }
     drawPoints(newpts);
   });
-  socket.on('chat', function(data) {
-    console.log('chat');
-    console.log(data);
+  // socket.on('chat', function(data) {
+  //   console.log('chat');
+  //   console.log(data);
+  // });
+  socket.on('givemeBoardAndErase', function() {
+    var data = cloneCanvas(canvas).toDataURL()
+    eraseAll();
+    $http.post('/ocr', {data: data});
+  });
+  socket.on('ocr', function(data) {
+    $scope.ocrResults.push({
+      text: data.text, 
+      canvasId: tmpCanvasUrl
+    });
   });
   socket.emit('init');
-
-  function cloneCanvas(oldCanvas) {
-
-      //create a new canvas
-      var newCanvas = document.createElement('canvas');
-      var context = newCanvas.getContext('2d');
-
-      //set dimensions
-      newCanvas.width = oldCanvas.width;
-      newCanvas.height = oldCanvas.height;
-
-      //apply the old canvas to the new one with background
-      context.drawImage(backgroundImage,
-        0,0,backgroundImage.width,backgroundImage.height,
-        0,0,newCanvas.width,newCanvas.height);
-      context.drawImage(oldCanvas, 0, 0);
-
-      //return the new canvas
-      return newCanvas;
-  }
 
   $scope.downloadBoard = function() {
     var newCanvas = cloneCanvas(canvas);
@@ -183,5 +205,5 @@ function Test($rootScope, $scope) {
   }
 }
 
-test.controller('TestCtrl', ['$rootScope', '$scope', Test]);
+test.controller('TestCtrl', ['$rootScope', '$scope', '$http', Test]);
 

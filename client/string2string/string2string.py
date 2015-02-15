@@ -37,13 +37,13 @@ class Client:
 		self.post(points_string)
 
 	def post(self,query):
-
-		#data = {'query': query, 'id': 'string2string'}
+		headers = {'Content-Length':0}
+		headers = urllib.parse.urlencode(headers)
 		connection = http.client.HTTPConnection(self.address)
 		url = self.page + '?query=' + query + '&id=string2string'
-		connection.request('POST', url)
+		connection.request('POST', url, headers)
 		response = connection.getresponse()
-		#print(response.status, response.reason)
+		print(response.status, response.reason)
 
 	def d2p(self,d):
 		r0 = d[0] - self.d_short[0]
@@ -88,6 +88,12 @@ class Client:
 			if byte == 'P':
 				return byte
 			if byte == 'R':
+				return byte
+			if byte == 'B':
+				return byte
+			if byte == 'C':
+				return byte
+			if byte == 'D':
 				return byte
 
 		coord_string = ''
@@ -158,12 +164,22 @@ class Client:
 					if type(p) is tuple:
 						packet.append(p)
 						#print(p[0],',',p[1])
-				if d == 'R':
-					break
+				print(d)
 				if d == 'B':
 					self.eraseAll()
-			packet = smooth_points(packet)
+				if d == 'R':
+					break
+			if len(packet) > 3:
+				packet = smooth_points(packet)
+			packet = self.scalebywidth(packet)
 			self.sendPoints(packet)
+
+	def scalebywidth(self,packet):
+		new_packet = []
+		for point in packet:
+			new_packet.append((point[0]/self.dx, point[1]/self.dx))
+		return new_packet
+
 
 ####### FUNCTIONS ##########
 
