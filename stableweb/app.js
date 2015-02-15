@@ -29,6 +29,7 @@ points as list of x,y
  */
 var points = [];
 function relayBoardInfo(line) {
+  console.log(points);
   var data = line.split(DELIM);
   var msgType = data.shift();
   if (msgType === 'E') {
@@ -62,7 +63,7 @@ io.sockets.on('connection', function(socket) {
   socket.on('init', function() {
     socket.emit('init', {data: points});
   });
-  
+
 });
 
 console.log('listening on port ' + configs.settings.port);
