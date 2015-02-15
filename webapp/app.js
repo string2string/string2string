@@ -87,6 +87,7 @@ io.sockets.on('connection', function(socket) {
   });
 
   socket.on('ocr', function(data) {
+    console.log(data.data);
     var base64Data = data.data.replace(/^data:image\/png;base64,/, '');
     console.log('got this far');
     fs.writeFile(__dirname+'/out.png', base64Data, 'base64', function(err) {

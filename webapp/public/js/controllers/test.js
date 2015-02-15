@@ -187,12 +187,12 @@ function Test($rootScope, $scope, $http) {
   // });
   socket.on('givemeBoardAndErase', function() {
     console.log('got request!');
-    var data = cloneCanvas(canvas).toDataURL()
+    var data = canvas.toDataURL();
     eraseAll();
     socket.emit('ocr', {data: data});
   });
   socket.on('ocr', function(data) {
-    console.log(data);
+    console.log(tmpCanvasUrl);
     $scope.ocrResults.push({
       text: data.text, 
       canvasId: tmpCanvasUrl
