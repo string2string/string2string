@@ -81,18 +81,29 @@ function Test($rootScope, $scope) {
     }, 5);
   }
 
+  function inflatePoints(points) {
+    for (var i = 0; i < points.length; ++i) {
+      if (i % 2 === 0) {
+        points[i] = points[i]*canvas.width;
+      } else {
+        points[i] = points[i]*canvas.height;
+      }
+    }
+  }
+
   var socket = io($rootScope.baseUrl);
   //socket.emit('my other event', { my: 'data' });
   socket.on('eraseAll', function() {
     eraseAll();
   });
   socket.on('draw', function(data) {
-    drawPoints(data.data);
+    var points = inflatePoints(data.data);
+    drawPoints(points);
   });
   socket.on('init', function(data) {
     console.log('init');
     for (var i = 0; i < data.data.length; ++i) {
-      drawPoints(data.data[i])
+      drawPoints(inflatePoints(data.data[i]))
     }
     var newpts = [];
     var r = 100*Math.random();
@@ -100,7 +111,6 @@ function Test($rootScope, $scope) {
       newpts.push(pts[i].x+r);
       newpts.push(pts[i].y+r);
     }
-    console.log(newpts.length)
     drawPoints(newpts);
   });
   socket.on('chat', function(data) {
