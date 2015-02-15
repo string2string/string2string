@@ -192,6 +192,7 @@ function Test($rootScope, $scope, $http) {
     socket.emit('ocr', {data: data});
   });
   socket.on('ocr', function(data) {
+    console.log(data);
     $scope.ocrResults.push({
       text: data.text, 
       canvasId: tmpCanvasUrl
