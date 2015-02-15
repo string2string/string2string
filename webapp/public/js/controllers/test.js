@@ -189,7 +189,7 @@ function Test($rootScope, $scope, $http) {
     console.log('got request!');
     var data = cloneCanvas(canvas).toDataURL()
     eraseAll();
-    $http.post('/ocr', {data: data});
+    socket.emit('ocr', {data: data});
   });
   socket.on('ocr', function(data) {
     $scope.ocrResults.push({
