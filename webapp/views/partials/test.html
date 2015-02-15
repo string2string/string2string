@@ -1,0 +1,31 @@
+<div class="nav navbar navbar-default navbar-fixed-top">
+    <ul class="nav navbar-nav">
+        <li role="presentation"><a snap-toggle="">Toggle Sidebar</a></li>
+        <li role="presentation"><a ng-click="downloadBoard()">Download Board</a></li>
+    </ul>
+</div>
+
+<snap-drawer>
+    <div>
+    <p>1</p>
+    <p>2</p>
+    <p>1Hello from drawer!</p>
+    <p>2Hello from drawer!</p>
+    <p>3Hello from drawer!</p>
+    <p>4Hello from drawer!</p>
+    <p>5Hello from drawer!</p>
+    <p>6Hello from drawer!</p>
+    <p>7Hello from drawer!</p>
+    <p>8Hello from drawer!</p>
+    <p>9Hello from drawer!</p>
+    <p>10Hello from drawer!</p>
+    <p>11Hello from drawer!</p>
+    <p>12Hello from drawer!</p>
+    <p>13Hello from drawer!</p>
+    </div>
+</snap-drawer>
+<snap-content snap-options="{touchToDrag:false,tapToClose:false}">
+    <div id="canvasDiv">
+        <canvas id="chalkboard"></canvas>
+    </div>
+</snap-content>

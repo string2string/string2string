@@ -7,7 +7,8 @@ var app = angular.module('smartboard', [
   'ngRoute',
   'http-auth-interceptor',
   'ui.bootstrap',
-  'controllers.board'
+  'controllers.board',
+  'controllers.test'
 ]);
 
 function configApp($routeProvider, $locationProvider) {
@@ -15,6 +16,10 @@ function configApp($routeProvider, $locationProvider) {
     .when('/', {
       templateUrl: 'partials/board.html',
       controller: 'BoardCtrl'
+    })
+    .when('/test', {
+      templateUrl: 'partials/test.html',
+      controller: 'TestCtrl'
     })
     .otherwise({
       redirectTo: '/'

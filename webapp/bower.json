@@ -11,7 +11,7 @@
     "angular-route": "~1.2.0",
     "angular-http-auth": "*",
     "angular-bootstrap": "~0.7.0",
-    "angular-socket-io": "~0.7.0",
-    "socket.io-client": "~1.3.3"
+    "socket.io-client": "~1.3.3",
+    "angular-snap": "latest"
   }
 }
