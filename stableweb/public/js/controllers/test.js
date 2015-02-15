@@ -153,7 +153,7 @@ function Test($rootScope, $scope, $http) {
   var socket = io($rootScope.baseUrl);
   //socket.emit('my other event', { my: 'data' });
   socket.on('eraseAll', function() {
-    var time = (new Date).getTime();
+    var time = ''+(new Date).getTime();
     cachedBoards[time] = cloneCanvas(canvas).toDataURL();
     $scope.cachedBoardIds.push(time);
     eraseAll();
