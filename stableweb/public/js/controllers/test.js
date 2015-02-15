@@ -149,14 +149,15 @@ function Test($rootScope, $scope, $http) {
   $scope.downloadCachedBoard = function(id) {
     saveAsFile(cachedBoards[id], 'canvas'+id+'.png');
   }
-
+  
   var socket = io($rootScope.baseUrl);
   //socket.emit('my other event', { my: 'data' });
   socket.on('eraseAll', function() {
-    var time = ''+(new Date).getTime();
+    var time = (new Date).getTime();
     cachedBoards[time] = cloneCanvas(canvas).toDataURL();
     $scope.cachedBoardIds.push(time);
     eraseAll();
+    $scope.$digest();
   });
   socket.on('draw', function(data) {
     var points = inflatePoints(data.data);
