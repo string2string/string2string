@@ -34,5 +34,5 @@ app.config([
 ]);
 
 app.run(['$rootScope', function($rootScope) {
-  $rootScope.baseUrl = 'localhost:3000';
+  $rootScope.baseUrl = 'hackcooper.cloudapp.net';
 }]);
