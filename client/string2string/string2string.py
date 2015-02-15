@@ -42,7 +42,7 @@ class Client:
 		url = self.page + '?query=' + query + '&id=string2string'
 		connection.request('POST', url)
 		response = connection.getresponse()
-		print(response.status, response.reason)
+		#print(response.status, response.reason)
 
 	def d2p(self,d):
 		r0 = d[0] - self.d_short[0]
@@ -115,7 +115,8 @@ class Client:
 				break
 			if serial_data is 'E':
 				continue
-			points.append(serial_data)
+			if type(serial_data) is tuple:
+				points.append(serial_data)
 		summed = sumTuple(points)
 		self.d_short = (summed[0]/len(points), self.d_short[1])
 		self.d_long = (self.d_long[0], summed[1]/len(points))
@@ -132,22 +133,28 @@ class Client:
 				break
 			if serial_data is 'E':
 				continue
-			points.append(serial_data)
+			if type(serial_data) is tuple:
+				points.append(serial_data)
 		summed = sumTuple(points)
 
 		self.d_short = (self.d_short[0], summed[1]/len(points))
-		self.d_long = (summed[0]/len(points), self.d_long[0])
+		self.d_long = (summed[0]/len(points), self.d_long[1])
+		
 		self.dx = ((self.d_long[0] - self.d_short[0]) + (self.d_long[1] - self.d_short[1]))/2
+		print('d_short:',self.d_short,'d_long:',self.d_long,'dx:',self.dx)
+
+		print('Calibration Complete')
 
 	def run(self):
 		while 1:
 			packet = []
-			while len(packet) < 10:
+			while 1:
 				d = self.serialRead()
 				if type(d) is tuple:
 					p = self.d2p(d)
 					if type(p) is tuple:
 						packet.append(p)
+						print(p[0],',',p[1])
 				if d == 'R':
 					break
 			self.sendPoints(packet)
