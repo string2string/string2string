@@ -86,8 +86,9 @@ io.sockets.on('connection', function(socket) {
     socket.emit('init', {data: points});
   });
 
-  socket.on('ocr', function() {
-    var base64Data = req.body.data.replace(/^data:image\/png;base64,/, '');
+  socket.on('ocr', function(data) {
+    var base64Data = data.data.replace(/^data:image\/png;base64,/, '');
+    console.log('got this far');
     fs.writeFile(__dirname+'/out.png', base64Data, 'base64', function(err) {
       if (err) { 
         fs.unlinkSync(__dirname+'/out.png');
@@ -97,6 +98,7 @@ io.sockets.on('connection', function(socket) {
         if (err) { return io.sockets.emit('ocr', {text: 'N/A'}); }
         fs.unlinkSync(__dirname+'/out.png');
         io.sockets.emit('ocr', {text: text});
+        console.log('success');
       });
     });
   });
