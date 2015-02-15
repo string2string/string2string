@@ -82,9 +82,13 @@ var fs = require('fs');
 app.post('/ocr', function(req, res, next) {
   var base64Data = req.body.data.replace(/^data:image\/png;base64,/, '');
   fs.writeFile(__dirname+'/out.png', base64Data, 'base64', function(err) {
-    if (err) { return io.sockets.emit('ocr', {text: 'failed image serialization'}); }
+    if (err) { 
+      fs.unlinkSync(__dirname+'/out.png');
+      return io.sockets.emit('ocr', {text: 'failed image serialization'});
+    }
     tesseract.process(__dirname+'/out.png', options, function(err, text) {
       if (err) { return io.sockets.emit('ocr', {text: 'N/A'}); }
+      fs.unlinkSync(__dirname+'/out.png');
       io.sockets.emit('ocr', {text: text});
     });
   });
