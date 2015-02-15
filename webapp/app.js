@@ -47,7 +47,6 @@ function relayBoardInfo(line) {
     }
     //io.sockets.emit('eraseAll');
   } else if (msgType === 'P') {
-    console.log(data);
     if (data[0]) {
       data = data[0].split(PDELIM);
     } else {
@@ -78,6 +77,7 @@ var options = {
 var tesseract = require('node-tesseract');
 var fs = require('fs');
 app.post('/ocr', function(req, res, next) {
+  console.log('post');
   var base64Data = req.body.data.replace(/^data:image\/png;base64,/, '');
   fs.writeFile(__dirname+'/out.png', base64Data, 'base64', function(err) {
     if (err) { 
