@@ -38,6 +38,7 @@ function relayBoardInfo(line) {
     var randomClient;
     if (clients.length > 0) {
       randomClient = Math.floor(Math.random() * clients.length);
+      console.log('send erase');
       clients[randomClient].emit('givemeBoardAndErase');
     }
     for (var i = 0; i < clients.length; ++i) {
@@ -47,7 +48,6 @@ function relayBoardInfo(line) {
     }
     //io.sockets.emit('eraseAll');
   } else if (msgType === 'P') {
-    console.log(data);
     if (data[0]) {
       data = data[0].split(PDELIM);
     } else {
@@ -78,20 +78,6 @@ var options = {
 };
 var tesseract = require('node-tesseract');
 var fs = require('fs');
-app.post('/ocr', function(req, res, next) {
-  var base64Data = req.body.data.replace(/^data:image\/png;base64,/, '');
-  fs.writeFile(__dirname+'/out.png', base64Data, 'base64', function(err) {
-    if (err) { 
-      fs.unlinkSync(__dirname+'/out.png');
-      return io.sockets.emit('ocr', {text: 'failed image serialization'});
-    }
-    tesseract.process(__dirname+'/out.png', options, function(err, text) {
-      if (err) { return io.sockets.emit('ocr', {text: 'N/A'}); }
-      fs.unlinkSync(__dirname+'/out.png');
-      io.sockets.emit('ocr', {text: text});
-    });
-  });
-});
 
 io.sockets.on('connection', function(socket) {
 
@@ -99,6 +85,24 @@ io.sockets.on('connection', function(socket) {
 
   socket.on('init', function() {
     socket.emit('init', {data: points});
+  });
+
+  socket.on('ocr', function(data) {
+    console.log(data.data);
+    var base64Data = data.data.replace(/^data:image\/png;base64,/, '');
+    console.log('got this far');
+    fs.writeFile(__dirname+'/out.png', base64Data, 'base64', function(err) {
+      if (err) { 
+        fs.unlinkSync(__dirname+'/out.png');
+        return io.sockets.emit('ocr', {text: 'failed image serialization'});
+      }
+      tesseract.process(__dirname+'/out.png', options, function(err, text) {
+        if (err) { return io.sockets.emit('ocr', {text: 'N/A'}); }
+        fs.unlinkSync(__dirname+'/out.png');
+        io.sockets.emit('ocr', {text: text});
+        console.log('success');
+      });
+    });
   });
 
   // socket.on('chat', function(data) {

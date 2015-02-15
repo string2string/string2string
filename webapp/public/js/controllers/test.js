@@ -186,11 +186,13 @@ function Test($rootScope, $scope, $http) {
   //   console.log(data);
   // });
   socket.on('givemeBoardAndErase', function() {
-    var data = cloneCanvas(canvas).toDataURL()
+    console.log('got request!');
+    var data = canvas.toDataURL();
     eraseAll();
-    $http.post('/ocr', {data: data});
+    socket.emit('ocr', {data: data});
   });
   socket.on('ocr', function(data) {
+    console.log(tmpCanvasUrl);
     $scope.ocrResults.push({
       text: data.text, 
       canvasId: tmpCanvasUrl
