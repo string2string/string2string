@@ -153,10 +153,12 @@ function Test($rootScope, $scope, $http) {
   var socket = io($rootScope.baseUrl);
   //socket.emit('my other event', { my: 'data' });
   socket.on('eraseAll', function() {
+    console.log('aea')
     var time = (new Data).getTime();
     cachedBoards[time] = cloneCanvas(canvas).toDataURL();
     cachedBoardIds.push(time);
     eraseAll();
+    console.log('aeafinish')
   });
   socket.on('draw', function(data) {
     var points = inflatePoints(data.data);
