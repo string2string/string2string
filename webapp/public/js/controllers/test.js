@@ -89,6 +89,7 @@ function Test($rootScope, $scope) {
         points[i] = points[i]*canvas.height;
       }
     }
+    return points;
   }
 
   var socket = io($rootScope.baseUrl);
