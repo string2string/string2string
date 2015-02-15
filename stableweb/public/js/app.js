@@ -34,5 +34,5 @@ app.config([
 ]);
 
 app.run(['$rootScope', function($rootScope) {
-  $rootScope.baseUrl = 'string2string.mybluemix.net';
+  $rootScope.baseUrl = 'localhost:3000';
 }]);
