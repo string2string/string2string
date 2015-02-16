@@ -7,7 +7,7 @@ Requirements
 =========
 * must have Python 3
 * must have pyserial
-* preferably run it on a linux machine
+* preferably run it on a Linux machine (the client looks for the serial connection in /dev/serial/by-id/)
 
 Running the app
 =========
@@ -16,4 +16,10 @@ Running the app
 To run the program:
 ```
 python client.py
+```
+
+or
+
+```
+python3 client.py
 ```
