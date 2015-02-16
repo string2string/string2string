@@ -22,6 +22,8 @@ Structure of the project
 * The program that serializes the sensor data from the arduino into x,y coordinates is found in the <b>client</b> folder.<br>
 * The webapp that streams the board data to the website in real time can be found in the <b>webapp</b> folder.
 
+The README.md in each folder will explain how to set up the project.
+
 Technical Details:
 =========
 A chalk-holder is attached to two strings, each connected over a pulley to a weight. The weights sit in static equilibrium, so they serve the purpose of keeping the string taut without negatively interfering with the writer.

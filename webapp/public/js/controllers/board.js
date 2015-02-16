@@ -1,6 +1,6 @@
-var test = angular.module('controllers.test', ['snap']);
+var board = angular.module('controllers.board', ['snap']);
 
-function Test($rootScope, $scope, $http) {
+function Board($rootScope, $scope, $http) {
   var canvas = $('#chalkboard')[0];
   canvas.width  = canvas.offsetWidth;
   canvas.height = canvas.offsetHeight;
@@ -178,5 +178,5 @@ function Test($rootScope, $scope, $http) {
   }
 }
 
-test.controller('TestCtrl', ['$rootScope', '$scope', '$http', Test]);
+test.controller('BoardCtrl', ['$rootScope', '$scope', '$http', Board]);
 

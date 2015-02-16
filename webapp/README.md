@@ -16,7 +16,8 @@ npm install
 bower install
 sass public/css/main.scss > public/css/main.css
 ```
-also must edit the settings in public/js/app.js and set the $rootScope.baseUrl to the address of the webserver
+also <b>must</b> edit the settings in public/js/app.js and set the $rootScope.baseUrl to the address of the webserver
+This will enable the websockets to connect to the correct server.
 
 to run server:
 ```

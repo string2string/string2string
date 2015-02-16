@@ -7,14 +7,14 @@ var app = angular.module('smartboard', [
   'ngRoute',
   'http-auth-interceptor',
   'ui.bootstrap',
-  'controllers.test'
+  'controllers.board'
 ]);
 
 function configApp($routeProvider, $locationProvider) {
   $routeProvider
     .when('/', {
-      templateUrl: 'partials/test.html',
-      controller: 'TestCtrl'
+      templateUrl: 'partials/board.html',
+      controller: 'BoardCtrl'
     })
     .otherwise({
       redirectTo: '/'
@@ -29,5 +29,6 @@ app.config([
 ]);
 
 app.run(['$rootScope', function($rootScope) {
+  //EDIT THIS URL TO POINT TO YOUR SERVER
   $rootScope.baseUrl = 'hackcooper.cloudapp.net';
 }]);
