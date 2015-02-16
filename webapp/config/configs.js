@@ -17,7 +17,7 @@ var settings = require('./settings');
 var config = {
   configure: function(app) {
     app.use(helmet());
-    app.use(morgan('short'));
+    //app.use(morgan('short'));
     app.set('views', path.join(__dirname, '../views'));
     app.set('view engine', 'html');
     app.engine('html', require('ejs').renderFile);

@@ -1,16 +1,10 @@
 var test = angular.module('controllers.test', ['snap']);
 
 function Test($rootScope, $scope, $http) {
-  var pts = [];
-  //test pts
-  pts.push({x: 100, y:100});
-  for (var i = 1; i < 100; i += 1) {
-    pts.push({x: pts[i-1].x + 100*Math.random(), y: pts[i-1].y + 50*Math.random()});
-  }
-
   var canvas = $('#chalkboard')[0];
   canvas.width  = canvas.offsetWidth;
-  canvas.height = canvas.offsetHeight;  
+  canvas.height = canvas.offsetHeight;
+  var demoWidth = canvas.offsetWidth; //for demo purposes
   var ctx = canvas.getContext('2d');
   var brushDiameter = 7;
   ctx.fillStyle = 'rgba(255,255,255,0.5)';  
@@ -89,7 +83,7 @@ function Test($rootScope, $scope, $http) {
       if (i % 2 === 0) {
         points[i] = points[i]*canvas.width;
       } else {
-        points[i] = points[i]*canvas.height;
+        points[i] = points[i]*demoWidth;
       }
     }
     return points;
@@ -148,55 +142,32 @@ function Test($rootScope, $scope, $http) {
     return newCanvas;
   }
 
+  //list of canvases
+  
+  var cachedBoards = {};
+  $scope.cachedBoardIds = [];
+
   $scope.downloadCachedBoard = function(id) {
-    console.log(id);
-    saveAsFile(cachedCanvases[id], 'canvas'+id+'.png');
+    saveAsFile(cachedBoards[id], 'canvas'+id+'.png');
   }
 
-  //array of objs storing text and canvasId
-  $scope.ocrResults = [{text: 'hello', canvasId: 'gg'}, {text: 'hi', canvasId:'haha'}];
-  //dictionary of canvases
-  var cachedCanvases = {};
-  var tmpCanvasUrl;
   var socket = io($rootScope.baseUrl);
   //socket.emit('my other event', { my: 'data' });
   socket.on('eraseAll', function() {
-    tmpCanvasUrl = cloneCanvas(canvas).toDataURL();
+    var time = (new Date).getTime();
+    cachedBoards[time] = cloneCanvas(canvas).toDataURL();
+    $scope.cachedBoardIds.push(time);
     eraseAll();
+    $scope.$digest();
   });
   socket.on('draw', function(data) {
     var points = inflatePoints(data.data);
     drawPoints(points);
   });
   socket.on('init', function(data) {
-    console.log('init');
     for (var i = 0; i < data.data.length; ++i) {
       drawPoints(inflatePoints(data.data[i]))
     }
-    var newpts = [];
-    var r = 100*Math.random();
-    for (i = 0; i < 100; ++i) {
-      newpts.push(pts[i].x+r);
-      newpts.push(pts[i].y+r);
-    }
-    drawPoints(newpts);
-  });
-  // socket.on('chat', function(data) {
-  //   console.log('chat');
-  //   console.log(data);
-  // });
-  socket.on('givemeBoardAndErase', function() {
-    console.log('got request!');
-    var data = canvas.toDataURL();
-    eraseAll();
-    socket.emit('ocr', {data: data});
-  });
-  socket.on('ocr', function(data) {
-    console.log(tmpCanvasUrl);
-    $scope.ocrResults.push({
-      text: data.text, 
-      canvasId: tmpCanvasUrl
-    });
   });
   socket.emit('init');
 
