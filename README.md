@@ -7,6 +7,21 @@ By using strings, pulleys, weights, ultrasonic distance sensing, a radio transmi
 
 You'll have to see it to believe it.
 
+Awards
+=====
+* HackCooper 2015 most technical hack
+
+Links
+=====
+* [Hackathon project profile](https://www.hackerleague.org/hackathons/hackcooper-2015/hacks/string2string)<br>
+* [Demo video](https://www.youtube.com/watch?v=y1aw0IiamFM)
+
+Structure of the project
+=====
+* The arduino code can found in the <b>arduino/sonar</b> folder.<br>
+* The program that serializes the sensor data from the arduino into x,y coordinates is found in the <b>client</b> folder.<br>
+* The webapp that streams the board data to the website in real time can be found in the <b>webapp</b> folder.
+
 Technical Details:
 =========
 A chalk-holder is attached to two strings, each connected over a pulley to a weight. The weights sit in static equilibrium, so they serve the purpose of keeping the string taut without negatively interfering with the writer.
@@ -30,14 +45,3 @@ In addition to providing a live stream of the board, users have the ability to d
 What makes String2String truly effective though is the cost. Each of our distance sensors, costs only 50 cents. The total estimated cost for all of our materials including pvcpipe, some weights/pulleys, and an Arduino, is under 40 dollars and can easily be halfed by using a less expensive microcontroller.
 
 In terms of our technical stack, the raw sensor data was transmitted from an Arduino to a Python program over serial. This Python program computes the filtered positions of the pen, and transmits these to our main Node.js server which we set up using IBM Bluemix. From there, users can connect to our website to access all of the data present on the server. The client was written in javascript using both Angular and Node.js.
-
-Structure of the project
-=====
-The arduino code can found in the <b>arduino/sonar</b> folder.<br>
-The program that serializes the sensor data from the arduino into x,y coordinates is found in the <b>client</b> folder.<br>
-The webapp that streams the board data to the website in real time can be found in the <b>webapp</b> folder.
-
-Links
-=====
-[Hackathon project profile](https://www.hackerleague.org/hackathons/hackcooper-2015/hacks/string2string)<br>
-[Demo video](https://www.youtube.com/watch?v=y1aw0IiamFM)
