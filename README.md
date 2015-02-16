@@ -31,8 +31,13 @@ What makes String2String truly effective though is the cost. Each of our distanc
 
 In terms of our technical stack, the raw sensor data was transmitted from an Arduino to a Python program over serial. This Python program computes the filtered positions of the pen, and transmits these to our main Node.js server which we set up using IBM Bluemix. From there, users can connect to our website to access all of the data present on the server. The client was written in javascript using both Angular and Node.js.
 
+Structure of the project
+=====
+The arduino code can found in the <b>arduino/sonar</b> folder.<br>
+The program that serializes the sensor data from the arduino into x,y coordinates is found in the <b>client</b> folder.<br>
+The webapp that streams the board data to the website in real time can be found in the <b>webapp</b> folder.
+
 Links
 =====
-(Hackathon project profile)[https://www.hackerleague.org/hackathons/hackcooper-2015/hacks/string2string]
-
-(Demo video)[https://www.youtube.com/watch?v=y1aw0IiamFM]
+[Hackathon project profile](https://www.hackerleague.org/hackathons/hackcooper-2015/hacks/string2string)<br>
+[Demo video](https://www.youtube.com/watch?v=y1aw0IiamFM)
