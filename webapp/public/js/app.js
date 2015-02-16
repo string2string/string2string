@@ -7,16 +7,11 @@ var app = angular.module('smartboard', [
   'ngRoute',
   'http-auth-interceptor',
   'ui.bootstrap',
-  'controllers.board',
   'controllers.test'
 ]);
 
 function configApp($routeProvider, $locationProvider) {
   $routeProvider
-    // .when('/', {
-    //   templateUrl: 'partials/board.html',
-    //   controller: 'BoardCtrl'
-    // })
     .when('/', {
       templateUrl: 'partials/test.html',
       controller: 'TestCtrl'
