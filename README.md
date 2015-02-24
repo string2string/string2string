@@ -1,6 +1,8 @@
 String2string
 =========
 
+Created by [David Katz](https://github.com/katzdave), [Harrison Zhao](https://github.com/harrisonzhao), and [Caleb Zulaski](https://github.com/calebzulawski) at [The Cooper Union](cooper.edu).
+
 String2String brings the classic blackboard to the 21st century.
 
 By using strings, pulleys, weights, ultrasonic distance sensing, a radio transmitter, geometry, and some advanced filtering algorithms, we have developed an efficient, non-intrusive and versatile method for encoding a blackboard at a high resolution; all for less than 40 dollars.
