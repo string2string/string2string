@@ -1,7 +1,7 @@
 String2string
 =========
 
-Created by [David Katz](https://github.com/katzdave), [Harrison Zhao](https://github.com/harrisonzhao), and [Caleb Zulaski](https://github.com/calebzulawski) at [The Cooper Union](cooper.edu).
+Created by [David Katz](https://github.com/katzdave), [Harrison Zhao](https://github.com/harrisonzhao), and [Caleb Zulaski](https://github.com/calebzulawski) at [The Cooper Union](http://cooper.edu).
 
 String2String brings the classic blackboard to the 21st century.
 
