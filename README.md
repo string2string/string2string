@@ -11,7 +11,8 @@ You'll have to see it to believe it.
 
 Awards
 =====
-* HackCooper 2015 most technical hack
+* [HackCooper 2015](http://hackcooper.org/) most technical hack
+* ["Dream it. Code it. Win it." 2015](http://www.dreamitcodeitwinit.org/) Ingenuity Prize
 
 Links
 =====
