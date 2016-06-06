@@ -28,25 +28,12 @@ points as list of x,y
   P - list of points as P~x1,y1,x2,y2
  */
 var points = [];
-var chatMessages = [];
-var clients = [];
 function relayBoardInfo(line) {
   var data = line.split(DELIM);
   var msgType = data.shift();
   if (msgType === 'E') {
+    io.sockets.emit('eraseAll');
     points = [];
-    var randomClient;
-    if (clients.length > 0) {
-      randomClient = Math.floor(Math.random() * clients.length);
-      console.log('send erase');
-      clients[randomClient].emit('givemeBoardAndErase');
-    }
-    for (var i = 0; i < clients.length; ++i) {
-      if (randomClient !== i) {
-        clients[i].emit('eraseAll');
-      }
-    }
-    //io.sockets.emit('eraseAll');
   } else if (msgType === 'P') {
     if (data[0]) {
       data = data[0].split(PDELIM);
@@ -71,54 +58,12 @@ app.post('/chalkboard', function(req, res, next) {
   res.sendStatus(200);
 });
 
-var options = {
-  l: 'eng',
-  binary: 'tesseract/tesseract --tessdata-dir tesseract/data/tesseract-ocr/tessdata/'
-
-};
-var tesseract = require('node-tesseract');
-var fs = require('fs');
-
 io.sockets.on('connection', function(socket) {
-
-  clients.push(socket);
 
   socket.on('init', function() {
     socket.emit('init', {data: points});
   });
 
-  socket.on('ocr', function(data) {
-    console.log(data.data);
-    var base64Data = data.data.replace(/^data:image\/png;base64,/, '');
-    console.log('got this far');
-    fs.writeFile(__dirname+'/out.png', base64Data, 'base64', function(err) {
-      if (err) { 
-        fs.unlinkSync(__dirname+'/out.png');
-        return io.sockets.emit('ocr', {text: 'failed image serialization'});
-      }
-      tesseract.process(__dirname+'/out.png', options, function(err, text) {
-        if (err) { return io.sockets.emit('ocr', {text: 'N/A'}); }
-        fs.unlinkSync(__dirname+'/out.png');
-        io.sockets.emit('ocr', {text: text});
-        console.log('success');
-      });
-    });
-  });
-
-  // socket.on('chat', function(data) {
-  //   chatMessages.push(data.line);
-  //   io.sockets.emit('chat', {data: data.line});
-  //   if (chatMessages.length > 50) {
-  //     chatMessages.shift();
-  //   }
-  // });
-
-  socket.on('disconnect', function() {
-      var index = clients.indexOf(socket);
-      if (index !== -1) {
-          clients.splice(index, 1);
-      }
-  });
 });
 
 console.log('listening on port ' + configs.settings.port);

@@ -1,28 +1,19 @@
-'use strict';
-/*global angular*/
-/*global io*/
-/*global getCurvePoints*/
+var board = angular.module('controllers.board', ['snap']);
 
-var board = angular.module('controllers.board', []);
-
-//seems like x is down and y is right
-function Board($rootScope) {
-  var pts = [];
-  //test pts
-  pts.push({x: 100, y:100});
-  for (var i = 1; i < 100; i += 1) {
-    pts.push({x: pts[i-1].x + 100*Math.random(), y: pts[i-1].y + 50*Math.random()});
-  }
-
+function Board($rootScope, $scope, $http) {
   var canvas = $('#chalkboard')[0];
-  canvas.width = $(window).width();
-  canvas.height = $(window).height();
+  canvas.width  = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+  var demoWidth = canvas.offsetWidth; //for demo purposes
   var ctx = canvas.getContext('2d');
   var brushDiameter = 7;
   ctx.fillStyle = 'rgba(255,255,255,0.5)';  
   ctx.strokeStyle = 'rgba(255,255,255,0.5)';  
   ctx.lineWidth = brushDiameter;
   ctx.lineCap = 'round';
+  ctx.globalCompositeOperation="destination-over";
+  var backgroundImage = new Image();
+  backgroundImage.src = '/img/bg.png';
 
   function draw(xLast, yLast, x, y) {
     ctx.strokeStyle = 'rgba(255,255,255,'+(0.4+Math.random()*0.2)+')';
@@ -87,37 +78,105 @@ function Board($rootScope) {
     }, 5);
   }
 
+  function inflatePoints(points) {
+    for (var i = 0; i < points.length; ++i) {
+      if (i % 2 === 0) {
+        points[i] = points[i]*canvas.width;
+      } else {
+        points[i] = points[i]*demoWidth;
+      }
+    }
+    return points;
+  }
+
   function eraseAll() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  
+  //code to save file
+  function saveAsFile(data, name) {
+    function destroyClickedElement(event) {
+      document.body.removeChild(event.target);
+    }
+    var fileNameToSaveAs = name;
+
+    var downloadLink = document.createElement('a');
+    downloadLink.download = fileNameToSaveAs;
+    downloadLink.innerHTML = 'Download File';
+    if (window.webkitURL)
+    {
+      // Chrome allows the link to be clicked
+      // without actually adding it to the DOM.
+      downloadLink.href = data;
+    }
+    else
+    {
+      // Firefox requires the link to be added to the DOM
+      // before it can be clicked.
+      downloadLink.href = data;
+      downloadLink.onclick = destroyClickedElement;
+      downloadLink.style.display = 'none';
+      document.body.appendChild(downloadLink);
+    }
+
+    downloadLink.click();
+  }
+
+  function cloneCanvas(oldCanvas) {
+
+    //create a new canvas
+    var newCanvas = document.createElement('canvas');
+    var context = newCanvas.getContext('2d');
+
+    //set dimensions
+    newCanvas.width = oldCanvas.width;
+    newCanvas.height = oldCanvas.height;
+
+    //apply the old canvas to the new one with background
+    context.drawImage(backgroundImage,
+      0,0,backgroundImage.width,backgroundImage.height,
+      0,0,newCanvas.width,newCanvas.height);
+    context.drawImage(oldCanvas, 0, 0);
+
+    //return the new canvas
+    return newCanvas;
+  }
+
+  //list of canvases
+  
+  var cachedBoards = {};
+  $scope.cachedBoardIds = [];
+
+  $scope.downloadCachedBoard = function(id) {
+    saveAsFile(cachedBoards[id], 'canvas'+id+'.png');
   }
 
   var socket = io($rootScope.baseUrl);
   //socket.emit('my other event', { my: 'data' });
   socket.on('eraseAll', function() {
+    var time = (new Date).getTime();
+    cachedBoards[time] = cloneCanvas(canvas).toDataURL();
+    $scope.cachedBoardIds.push(time);
     eraseAll();
+    $scope.$digest();
   });
   socket.on('draw', function(data) {
-    drawPoints(data.data);
+    var points = inflatePoints(data.data);
+    drawPoints(points);
   });
   socket.on('init', function(data) {
-    console.log('init');
     for (var i = 0; i < data.data.length; ++i) {
-      drawPoints(data.data[i])
+      drawPoints(inflatePoints(data.data[i]))
     }
-    var newpts = [];
-    var r = 100*Math.random();
-    for (i = 0; i < 100; ++i) {
-      newpts.push(pts[i].x+r);
-      newpts.push(pts[i].y+r);
-    }
-    console.log(newpts.length)
-    drawPoints(newpts);
-  });
-  socket.on('chat', function(data) {
-    console.log('chat');
-    console.log(data);
   });
   socket.emit('init');
+
+  $scope.downloadBoard = function() {
+    var newCanvas = cloneCanvas(canvas);
+    var data = newCanvas.toDataURL();
+    saveAsFile(data, 'canvas'+(new Date()).getTime()+'.png');
+  }
 }
 
-board.controller('BoardCtrl', ['$rootScope', Board])
+test.controller('BoardCtrl', ['$rootScope', '$scope', '$http', Board]);
+
